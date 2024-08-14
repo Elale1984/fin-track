@@ -1,55 +1,28 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
-var userSchema = new mongoose.Schema({
-  userName: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  firstName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
-    type: String,
-    required: true,
-  },
-  phone: {
-    type: String,
-    required: true,
-  },
+const userSchema = new mongoose.Schema({
+  userName: String,
+  email: String,
+  password: String,
+  firstName: String,
+  lastName: String,
+  phone: String,
   address: {
-    streetAddress: { type: String, required: true },
-    streetAddress2: { type: String },
-    city: { type: String, required: true },
-    state: { type: String, required: true },
-    zip: { type: String, required: true },
+    streetAddress: String,
+    city: String,
+    state: String,
+    zip: String
   },
-  bills: [{ type: mongoose.Schema.Types.ObjectId, ref: "Bill" }],
-  paymentAccounts: [
-    { type: mongoose.Schema.Types.ObjectId, ref: "PaymentAccount" },
-  ],
-  creditCards: [{ type: mongoose.Schema.Types.ObjectId, ref: "CreditCard" }],
-  savingsAccounts: [
-    { type: mongoose.Schema.Types.ObjectId, ref: "SavingsAccount" },
-  ],
-  checkingAccounts: [
-    { type: mongoose.Schema.Types.ObjectId, ref: "CheckingAccount" },
-  ],
-  incomeStreams: [
-    { type: mongoose.Schema.Types.ObjectId, ref: "IncomeStream" },
-  ],
+  bills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bill' }],
+  paymentAccounts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'PaymentAccount' }],
+  creditCards: [{ type: mongoose.Schema.Types.ObjectId, ref: 'CreditCard' }],
+  savingsAccounts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SavingsAccount' }],
+  checkingAccounts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'CheckingAccount' }],
+  incomeStreams: [{ type: mongoose.Schema.Types.ObjectId, ref: 'IncomeStream' }]
 });
+
+
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
@@ -59,5 +32,5 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-const User = mongoose.model("User", userSchema);
-module.exports = user;
+const User = mongoose.model('User', userSchema);
+module.exports = User;
