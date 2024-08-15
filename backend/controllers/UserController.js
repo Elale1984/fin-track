@@ -78,14 +78,30 @@ exports.update = async (req, res) => {
 };
 
 // Delete a user with the specified id in the request
-exports.destroy = async (req, res) => {
+exports.deleteUser = async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res.status(404).send({ message: "User not found." });
+    // Ensure req.user is populated
+    if (!req.user) {
+      return res.status(401).send({ message: 'Unauthorized' });
     }
-    res.send({ message: "User deleted successfully!" });
+
+    // Check if the user is deleting their own account or is an admin
+    if (req.user._id.toString() !== req.params.id && !req.user.isAdmin) {
+      return res.status(403).send({ message: 'You are not authorized to delete this account.' });
+    }
+
+    // Find and delete the user by ID
+    const user = await User.findByIdAndDelete(req.params.id);
+
+    // Check if the user was found and deleted
+    if (!user) {
+      return res.status(404).send({ message: 'User not found.' });
+    }
+
+    // Return success response
+    res.send({ message: 'User deleted successfully!' });
   } catch (err) {
+    console.error('Error deleting user:', err); // Log the error for debugging
     res.status(500).send({ message: err.message });
   }
 };

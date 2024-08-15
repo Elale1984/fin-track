@@ -1,5 +1,5 @@
-const Bill = require('../models/Bill');
-const User = require('../models/User');
+const Bill = require("../models/Bill");
+const User = require("../models/User");
 
 // Create a new bill
 exports.createBill = async (req, res) => {
@@ -13,15 +13,14 @@ exports.createBill = async (req, res) => {
       amount,
       dueDate,
       category,
-      isPastDue: dueDate < new Date()
+      isPastDue: dueDate < new Date(),
     });
 
     // Find the user and add the bill to their list of bills
     const user = await User.findById(req.user._id);
-    
+
     user.bills.push(bill._id);
     await user.save();
-
 
     res.status(201).json(bill);
   } catch (error) {
@@ -47,7 +46,7 @@ exports.getBill = async (req, res) => {
     if (bill && bill.userId.equals(req.user._id)) {
       res.json(bill);
     } else {
-      res.status(404).json({ message: 'Bill not found' });
+      res.status(404).json({ message: "Bill not found" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -58,6 +57,7 @@ exports.getBill = async (req, res) => {
 exports.updateBill = async (req, res) => {
   const { name, amount, dueDate, category } = req.body;
 
+  console.log("Bill Id: ", req.params.id);
   try {
     const bill = await Bill.findById(req.params.id);
 
@@ -71,7 +71,7 @@ exports.updateBill = async (req, res) => {
       const updatedBill = await bill.save();
       res.json(updatedBill);
     } else {
-      res.status(404).json({ message: 'Bill not found' });
+      res.status(404).json({ message: "Bill not found" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -84,10 +84,10 @@ exports.deleteBill = async (req, res) => {
     const bill = await Bill.findById(req.params.id);
 
     if (bill && bill.userId.equals(req.user._id)) {
-      await bill.remove();
-      res.json({ message: 'Bill removed' });
+      await bill.deleteOne(); // Use deleteOne instead of remove
+      res.json({ message: "Bill removed" });
     } else {
-      res.status(404).json({ message: 'Bill not found' });
+      res.status(404).json({ message: "Bill not found" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
