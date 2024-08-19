@@ -1,8 +1,69 @@
+import { Box, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
-  return (
-    <div>NavBar</div>
-  )
-}
+  const navigate = useNavigate();
 
-export default NavBar
+  const handleLogout = () => {
+    // Clear the token
+    localStorage.removeItem('authToken');
+
+    // Redirect to login screen
+    navigate('/login');
+  }
+
+  return (
+    <Box
+      display="flex"
+      sx={{
+        flexDirection: "column",
+        backgroundColor: "white",
+        width: "10vw",
+        height: "100vh",
+        borderRight: "0.1rem solid lightGray",
+        boxShadow: "1px 1px 7px black",
+        px: 1,
+      }}
+    >
+      
+      <Button 
+        variant="text" 
+        color="primary" 
+        onClick={() => navigate('/')}
+        sx={{ mb: 2 }}
+      >
+        Home
+      </Button>
+
+      <Button 
+        variant="text" 
+        color="primary" 
+        onClick={() => navigate('/budgets')}
+        sx={{ mb: 2 }}
+      >
+        Budgets
+      </Button>
+
+      <Button 
+        variant="text" 
+        color="primary" 
+        onClick={() => navigate('/goals')}
+        sx={{ mb: 2 }}
+      >
+        Goals
+      </Button>
+
+      <Button 
+        variant="contained" 
+        color="secondary" 
+        onClick={handleLogout}
+
+
+      >
+        Logout
+      </Button>
+    </Box>
+  );
+};
+
+export default NavBar;

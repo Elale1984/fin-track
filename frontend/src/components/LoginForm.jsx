@@ -30,7 +30,7 @@ const LoginForm = () => {
 
       // Redirect to the home page
       navigate("/");
-    } catch (err) {
+    } catch {
       setError("Username or password is incorrect");
     }
   };
